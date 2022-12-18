@@ -40,7 +40,7 @@ main (int argc, char **argv)
 
   SC3X (sc3_MPI_Info_create (&info_noncontig));
   SC3X (sc3_MPI_Info_set
-        (info_noncontig, "alloc_shared_noncontig", "false"));
+        (info_noncontig, "alloc_shared_noncontig", "true"));
 
   sc3_MPI_Win_allocate_shared
         (sizeof (int), sizeof (int),
