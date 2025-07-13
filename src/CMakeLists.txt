@@ -13,6 +13,7 @@ sc3_base.c sc3_alloc.c sc3_error.c sc3_refcount.c sc3_mpi.c
 sc3_array.c sc3_log.c sc3_trace.c sc3_memstamp.c sc3_mpienv.c
 sc_options.c sc_getopt.c sc_getopt1.c
 sc_scda.c
+sc_camera.c
 )
 
 if(MSVC AND NOT SC_HAVE_GETTIMEOFDAY)

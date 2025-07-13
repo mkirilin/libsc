@@ -21,7 +21,7 @@ libsc_installed_headers = \
         src/sc3_array.h src/sc3_log.h \
         src/sc3_trace.h src/sc3_memstamp.h \
         src/sc_uint128.h src/sc_v4l2.h \
-        src/sc_puff.h src/sc_scda.h
+        src/sc_puff.h src/sc_scda.h src/sc_camera.h
 libsc_internal_headers = \
         src/sc_builtin/getopt.h src/sc_builtin/getopt_int.h \
         src/sc_builtin/sc_getopt.h
@@ -40,7 +40,7 @@ libsc_compiled_sources = \
         src/sc3_array.c src/sc3_log.c \
         src/sc3_trace.c src/sc3_memstamp.c \
         src/sc_uint128.c src/sc_v4l2.c \
-        src/sc_puff.c src/sc_scda.c
+        src/sc_puff.c src/sc_scda.c src/sc_camera.c
 libsc_original_headers =
 
 # this variable is used for headers that are not publicly installed
