@@ -1,4 +1,5 @@
 option( SC_ENABLE_MPI "use MPI library" OFF )
+option( SC_ENABLE_SOCKET "Enable socket communication features" OFF )
 
 option( SC_ENABLE_FILE_CHECKS "activate tests that use file i/o functions" ON)
 

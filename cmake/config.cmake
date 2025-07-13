@@ -107,8 +107,10 @@ if( SC_ENABLE_MPI )
   include(cmake/check_mpiaintdiff.cmake)
   # perform check of newer MPI data types
   include(cmake/check_mpitype.cmake)
-  # perform check to set SC_ENABLE_OMPICOMMSOCKET
-  include(cmake/check_ompicommsocket.cmake)
+  # perform check to set SC_ENABLE_OMPICOMMSOCKET only if socket is enabled
+  if(SC_ENABLE_SOCKET)
+    include(cmake/check_ompicommsocket.cmake)
+  endif()
 endif()
 
 check_symbol_exists(realloc stdlib.h SC_ENABLE_USE_REALLOC)

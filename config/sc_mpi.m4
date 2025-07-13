@@ -19,6 +19,8 @@ dnl --disable-mpishared Only effective if --enable-mpi is given.  In this case,
 dnl                   disable MPI shared windows and split node communicators.
 dnl                   If not disabled, decide support by compile-and-link test
 dnl                   of both shared windows and split node communicators.
+dnl --enable-socket   Only effective if --enable-mpi is given. In this case,
+dnl                   checks for MPI windows split across sockets.
 dnl
 dnl If MPI is enabled, set AC_DEFINE and AC_CONDITIONAL for PREFIX_ENABLE_MPI.
 dnl If MPI I/O is not disabled, set these for PREFIX_ENABLE_MPIIO.
@@ -116,6 +118,23 @@ if test "x$enableval" = xyes ; then
 elif test "x$enableval" != xno ; then
   AC_MSG_WARN([Ignoring --enable-mpishared with unsupported argument])
 fi
+
+dnl The variable SC_ENABLE_MPISOCKET is set if --enable-socket is given.
+dnl If enabled, run the compile-and-link test for OMPI_COMM_TYPE_SOCKET.
+HAVE_PKG_MPISOCKET=no
+AC_ARG_ENABLE([socket],
+              [AS_HELP_STRING([--enable-socket],
+               [enable MPI socket communication features (only with MPI)])],,
+              [enableval=no])
+if test "x$enableval" = xyes ; then
+  if test "x$HAVE_PKG_MPI" = xyes ; then
+    HAVE_PKG_MPISOCKET=yes
+  fi
+elif test "x$enableval" != xno ; then
+  AC_MSG_WARN([Ignoring --enable-socket with unsupported argument])
+fi
+AC_MSG_CHECKING([whether we are using MPI socket features])
+AC_MSG_RESULT([$HAVE_PKG_MPISOCKET])
 
 dnl We allow the user to specify the configure option --enable-valgrind.
 dnl If given and valgrind is found, we use it to run tests on make check.
@@ -630,13 +649,20 @@ dnl  ])
     AC_DEFINE([ENABLE_MPICOMMSHARED], 1,
               [Define to 1 if we can use MPI_COMM_TYPE_SHARED])
   fi
+
   dnl Run test to check availability of MPI split socket communicator
-  $1_ENABLE_OMPICOMMSOCKET=yes
-  SC_OMPICOMMSOCKET_C_COMPILE_AND_LINK(,[$1_ENABLE_OMPICOMMSOCKET=no])
-  if test "x$$1_ENABLE_OMPICOMMSOCKET" = xyes ; then
-    AC_DEFINE([ENABLE_OMPICOMMSOCKET], 1,
-              [Define to 1 if we can use OMPI_COMM_TYPE_SOCKET])
+  dnl Only run this test if --enable-socket was provided
+  if test "x$HAVE_PKG_MPISOCKET" = xyes ; then
+    $1_ENABLE_OMPICOMMSOCKET=yes
+    SC_OMPICOMMSOCKET_C_COMPILE_AND_LINK(,[$1_ENABLE_OMPICOMMSOCKET=no])
+    if test "x$$1_ENABLE_OMPICOMMSOCKET" = xyes ; then
+      AC_DEFINE([ENABLE_OMPICOMMSOCKET], 1,
+                [Define to 1 if we can use OMPI_COMM_TYPE_SOCKET])
+    fi
+  else
+    $1_ENABLE_OMPICOMMSOCKET=no
   fi
+
   dnl Deactivate overall MPI 3 code when not available or not configured
   AC_MSG_CHECKING([whether we are using MPI 3 node shared memory])
   if test "x$$1_ENABLE_MPIWINSHARED" != xyes || \
@@ -649,7 +675,10 @@ dnl  ])
   fi
   AC_MSG_RESULT([$HAVE_PKG_MPISHARED])
 fi
+
+dnl Define conditionals outside the MPI check to ensure they're always defined
 AM_CONDITIONAL([$1_ENABLE_MPISHARED], [test "x$HAVE_PKG_MPISHARED" = xyes])
+AM_CONDITIONAL([$1_ENABLE_MPISOCKET], [test "x$HAVE_PKG_MPISOCKET" = xyes])
 
 dnl dnl figure out the MPI include directories
 dnl SC_MPI_INCLUDES
