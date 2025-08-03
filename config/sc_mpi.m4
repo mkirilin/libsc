@@ -234,6 +234,8 @@ fi
 AM_CONDITIONAL([$1_ENABLE_MPI], [test "x$HAVE_PKG_MPI" = xyes])
 AM_CONDITIONAL([$1_ENABLE_MPIIO], [test "x$HAVE_PKG_MPIIO" = xyes])
 AM_CONDITIONAL([$1_ENABLE_MPITHREAD], [test "x$HAVE_PKG_MPITHREAD" = xyes])
+AM_CONDITIONAL([$1_ENABLE_MPISHARED], [test "x$HAVE_PKG_MPISHARED" = xyes])
+AM_CONDITIONAL([$1_ENABLE_MPISOCKET], [test "x$HAVE_PKG_MPISOCKET" = xyes])
 ])
 
 dnl SC_MPI_F77_COMPILE_AND_LINK([action-if-successful], [action-if-failed])
@@ -675,10 +677,6 @@ dnl  ])
   fi
   AC_MSG_RESULT([$HAVE_PKG_MPISHARED])
 fi
-
-dnl Define conditionals outside the MPI check to ensure they're always defined
-AM_CONDITIONAL([$1_ENABLE_MPISHARED], [test "x$HAVE_PKG_MPISHARED" = xyes])
-AM_CONDITIONAL([$1_ENABLE_MPISOCKET], [test "x$HAVE_PKG_MPISOCKET" = xyes])
 
 dnl dnl figure out the MPI include directories
 dnl SC_MPI_INCLUDES
